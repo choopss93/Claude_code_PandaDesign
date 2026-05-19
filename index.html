@@ -1,0 +1,759 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>판다기프트 디자인 시스템</title>
+  <style>
+    :root {
+      /* Brand Colors */
+      --panda-black: #1A1A1A;
+      --panda-white: #FFFFFF;
+      --panda-gray-50: #F8F8F8;
+      --panda-gray-100: #F0F0F0;
+      --panda-gray-200: #E0E0E0;
+      --panda-gray-300: #BDBDBD;
+      --panda-gray-400: #9E9E9E;
+      --panda-gray-500: #757575;
+      --panda-gray-600: #616161;
+      --panda-gray-700: #424242;
+      --panda-gray-800: #2D2D2D;
+      --panda-gray-900: #1A1A1A;
+
+      --panda-primary: #1A1A1A;
+      --panda-primary-hover: #333333;
+      --panda-accent: #E8342A;
+      --panda-accent-hover: #C9281F;
+      --panda-accent-light: #FFF0EF;
+      --panda-success: #2E7D32;
+      --panda-success-light: #E8F5E9;
+      --panda-warning: #F57C00;
+      --panda-warning-light: #FFF3E0;
+      --panda-info: #1565C0;
+      --panda-info-light: #E3F2FD;
+
+      /* Typography */
+      --font-sans: 'Apple SD Gothic Neo', 'Noto Sans KR', sans-serif;
+      --font-size-xs: 11px;
+      --font-size-sm: 13px;
+      --font-size-base: 15px;
+      --font-size-md: 17px;
+      --font-size-lg: 20px;
+      --font-size-xl: 24px;
+      --font-size-2xl: 30px;
+      --font-size-3xl: 38px;
+
+      /* Spacing */
+      --space-1: 4px;
+      --space-2: 8px;
+      --space-3: 12px;
+      --space-4: 16px;
+      --space-5: 20px;
+      --space-6: 24px;
+      --space-8: 32px;
+      --space-10: 40px;
+      --space-12: 48px;
+      --space-16: 64px;
+
+      /* Radius */
+      --radius-sm: 4px;
+      --radius-md: 8px;
+      --radius-lg: 12px;
+      --radius-xl: 16px;
+      --radius-full: 9999px;
+
+      /* Shadow */
+      --shadow-sm: 0 1px 3px rgba(0,0,0,0.08);
+      --shadow-md: 0 4px 12px rgba(0,0,0,0.10);
+      --shadow-lg: 0 8px 24px rgba(0,0,0,0.12);
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: var(--font-sans);
+      font-size: var(--font-size-base);
+      color: var(--panda-gray-900);
+      background: var(--panda-gray-50);
+      line-height: 1.6;
+    }
+
+    /* Layout */
+    .ds-header {
+      background: var(--panda-black);
+      color: var(--panda-white);
+      padding: var(--space-8) var(--space-8);
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      display: flex;
+      align-items: center;
+      gap: var(--space-4);
+    }
+    .ds-logo { font-size: 22px; font-weight: 700; letter-spacing: -0.5px; }
+    .ds-logo span { color: var(--panda-accent); }
+    .ds-subtitle { font-size: var(--font-size-sm); color: var(--panda-gray-400); margin-left: auto; }
+
+    .ds-nav {
+      background: var(--panda-white);
+      border-bottom: 1px solid var(--panda-gray-200);
+      display: flex;
+      gap: 0;
+      overflow-x: auto;
+      scrollbar-width: none;
+    }
+    .ds-nav::-webkit-scrollbar { display: none; }
+    .ds-nav a {
+      padding: var(--space-3) var(--space-5);
+      font-size: var(--font-size-sm);
+      color: var(--panda-gray-500);
+      text-decoration: none;
+      white-space: nowrap;
+      border-bottom: 2px solid transparent;
+      transition: all 0.2s;
+    }
+    .ds-nav a:hover, .ds-nav a.active {
+      color: var(--panda-black);
+      border-bottom-color: var(--panda-accent);
+    }
+
+    .ds-container {
+      max-width: 960px;
+      margin: 0 auto;
+      padding: var(--space-8) var(--space-5);
+    }
+
+    .ds-section {
+      margin-bottom: var(--space-16);
+    }
+
+    .ds-section-title {
+      font-size: var(--font-size-xl);
+      font-weight: 700;
+      margin-bottom: var(--space-2);
+      padding-bottom: var(--space-3);
+      border-bottom: 2px solid var(--panda-gray-200);
+    }
+    .ds-section-desc {
+      color: var(--panda-gray-500);
+      font-size: var(--font-size-sm);
+      margin-bottom: var(--space-6);
+    }
+
+    .ds-group-title {
+      font-size: var(--font-size-sm);
+      font-weight: 600;
+      color: var(--panda-gray-500);
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      margin-bottom: var(--space-3);
+      margin-top: var(--space-6);
+    }
+
+    /* Color Swatches */
+    .color-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(130px, 1fr));
+      gap: var(--space-3);
+    }
+    .color-swatch {
+      border-radius: var(--radius-md);
+      overflow: hidden;
+      box-shadow: var(--shadow-sm);
+      background: var(--panda-white);
+    }
+    .color-swatch-bg {
+      height: 72px;
+    }
+    .color-swatch-info {
+      padding: var(--space-2) var(--space-3);
+    }
+    .color-swatch-name {
+      font-size: var(--font-size-xs);
+      font-weight: 600;
+      color: var(--panda-gray-700);
+    }
+    .color-swatch-value {
+      font-size: var(--font-size-xs);
+      color: var(--panda-gray-400);
+      font-family: monospace;
+    }
+
+    /* Typography */
+    .type-sample {
+      background: var(--panda-white);
+      border-radius: var(--radius-lg);
+      padding: var(--space-5) var(--space-6);
+      margin-bottom: var(--space-3);
+      box-shadow: var(--shadow-sm);
+      display: flex;
+      align-items: baseline;
+      gap: var(--space-4);
+    }
+    .type-label {
+      font-size: var(--font-size-xs);
+      color: var(--panda-gray-400);
+      white-space: nowrap;
+      min-width: 80px;
+      font-family: monospace;
+    }
+
+    /* Buttons */
+    .btn-grid {
+      display: flex;
+      flex-wrap: wrap;
+      gap: var(--space-3);
+      align-items: center;
+      background: var(--panda-white);
+      padding: var(--space-5) var(--space-6);
+      border-radius: var(--radius-lg);
+      box-shadow: var(--shadow-sm);
+      margin-bottom: var(--space-3);
+    }
+
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: var(--space-2);
+      border: none;
+      border-radius: var(--radius-md);
+      font-family: var(--font-sans);
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.2s;
+      text-decoration: none;
+    }
+    .btn-lg { padding: 14px 28px; font-size: var(--font-size-md); border-radius: var(--radius-lg); }
+    .btn-md { padding: 10px 20px; font-size: var(--font-size-base); }
+    .btn-sm { padding: 7px 14px; font-size: var(--font-size-sm); border-radius: var(--radius-sm); }
+    .btn-xs { padding: 4px 10px; font-size: var(--font-size-xs); border-radius: var(--radius-sm); }
+
+    .btn-primary { background: var(--panda-black); color: var(--panda-white); }
+    .btn-primary:hover { background: var(--panda-gray-700); }
+    .btn-accent { background: var(--panda-accent); color: var(--panda-white); }
+    .btn-accent:hover { background: var(--panda-accent-hover); }
+    .btn-outline { background: transparent; color: var(--panda-black); border: 1.5px solid var(--panda-black); }
+    .btn-outline:hover { background: var(--panda-gray-50); }
+    .btn-ghost { background: var(--panda-gray-100); color: var(--panda-gray-700); }
+    .btn-ghost:hover { background: var(--panda-gray-200); }
+    .btn-danger { background: var(--panda-accent); color: var(--panda-white); }
+    .btn-disabled { background: var(--panda-gray-200); color: var(--panda-gray-400); cursor: not-allowed; }
+
+    /* Badges */
+    .badge-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: var(--space-2);
+      padding: var(--space-5) var(--space-6);
+      background: var(--panda-white);
+      border-radius: var(--radius-lg);
+      box-shadow: var(--shadow-sm);
+      margin-bottom: var(--space-3);
+    }
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      padding: 3px 10px;
+      border-radius: var(--radius-full);
+      font-size: var(--font-size-xs);
+      font-weight: 600;
+    }
+    .badge-black { background: var(--panda-black); color: var(--panda-white); }
+    .badge-accent { background: var(--panda-accent); color: var(--panda-white); }
+    .badge-accent-light { background: var(--panda-accent-light); color: var(--panda-accent); }
+    .badge-success { background: var(--panda-success-light); color: var(--panda-success); }
+    .badge-warning { background: var(--panda-warning-light); color: var(--panda-warning); }
+    .badge-info { background: var(--panda-info-light); color: var(--panda-info); }
+    .badge-gray { background: var(--panda-gray-100); color: var(--panda-gray-600); }
+    .badge-outline { background: transparent; color: var(--panda-gray-600); border: 1px solid var(--panda-gray-300); }
+
+    /* Inputs */
+    .input-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: var(--space-4);
+      background: var(--panda-white);
+      padding: var(--space-5) var(--space-6);
+      border-radius: var(--radius-lg);
+      box-shadow: var(--shadow-sm);
+      margin-bottom: var(--space-3);
+    }
+    @media (max-width: 600px) { .input-grid { grid-template-columns: 1fr; } }
+    .input-group { display: flex; flex-direction: column; gap: var(--space-1); }
+    .input-label {
+      font-size: var(--font-size-xs);
+      font-weight: 600;
+      color: var(--panda-gray-600);
+    }
+    .input-field {
+      padding: 10px 14px;
+      border: 1.5px solid var(--panda-gray-200);
+      border-radius: var(--radius-md);
+      font-family: var(--font-sans);
+      font-size: var(--font-size-sm);
+      color: var(--panda-gray-900);
+      background: var(--panda-white);
+      transition: border-color 0.2s;
+      outline: none;
+    }
+    .input-field:focus { border-color: var(--panda-black); }
+    .input-field.error { border-color: var(--panda-accent); }
+    .input-field.success { border-color: var(--panda-success); }
+    .input-field:disabled { background: var(--panda-gray-50); color: var(--panda-gray-400); }
+    .input-hint { font-size: var(--font-size-xs); color: var(--panda-gray-400); }
+    .input-hint.error { color: var(--panda-accent); }
+    .input-hint.success { color: var(--panda-success); }
+
+    /* Cards */
+    .card-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+      gap: var(--space-4);
+      margin-bottom: var(--space-3);
+    }
+    .card {
+      background: var(--panda-white);
+      border-radius: var(--radius-xl);
+      overflow: hidden;
+      box-shadow: var(--shadow-sm);
+      transition: box-shadow 0.2s, transform 0.2s;
+    }
+    .card:hover { box-shadow: var(--shadow-lg); transform: translateY(-2px); }
+    .card-img {
+      width: 100%;
+      height: 140px;
+      object-fit: cover;
+      background: var(--panda-gray-100);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 40px;
+    }
+    .card-body { padding: var(--space-4) var(--space-5); }
+    .card-title { font-size: var(--font-size-md); font-weight: 700; margin-bottom: var(--space-1); }
+    .card-desc { font-size: var(--font-size-sm); color: var(--panda-gray-500); margin-bottom: var(--space-4); }
+    .card-footer {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: var(--space-3) var(--space-5);
+      border-top: 1px solid var(--panda-gray-100);
+    }
+    .card-price { font-size: var(--font-size-lg); font-weight: 700; }
+    .card-price-unit { font-size: var(--font-size-xs); color: var(--panda-gray-400); font-weight: 400; }
+
+    /* Table */
+    .ds-table-wrap {
+      background: var(--panda-white);
+      border-radius: var(--radius-lg);
+      box-shadow: var(--shadow-sm);
+      overflow: hidden;
+      margin-bottom: var(--space-3);
+    }
+    .ds-table { width: 100%; border-collapse: collapse; font-size: var(--font-size-sm); }
+    .ds-table th {
+      background: var(--panda-gray-50);
+      padding: var(--space-3) var(--space-4);
+      text-align: left;
+      font-size: var(--font-size-xs);
+      font-weight: 600;
+      color: var(--panda-gray-500);
+      text-transform: uppercase;
+      letter-spacing: 0.3px;
+      border-bottom: 1px solid var(--panda-gray-200);
+    }
+    .ds-table td {
+      padding: var(--space-3) var(--space-4);
+      border-bottom: 1px solid var(--panda-gray-100);
+      color: var(--panda-gray-800);
+    }
+    .ds-table tr:last-child td { border-bottom: none; }
+    .ds-table tr:hover td { background: var(--panda-gray-50); }
+
+    /* Toast */
+    .toast-grid {
+      display: flex;
+      flex-direction: column;
+      gap: var(--space-3);
+      background: var(--panda-white);
+      padding: var(--space-5) var(--space-6);
+      border-radius: var(--radius-lg);
+      box-shadow: var(--shadow-sm);
+      margin-bottom: var(--space-3);
+    }
+    .toast {
+      display: flex;
+      align-items: center;
+      gap: var(--space-3);
+      padding: var(--space-3) var(--space-4);
+      border-radius: var(--radius-md);
+      font-size: var(--font-size-sm);
+    }
+    .toast-icon { font-size: 18px; flex-shrink: 0; }
+    .toast-msg { flex: 1; font-weight: 500; }
+    .toast-success { background: var(--panda-success-light); color: var(--panda-success); }
+    .toast-error { background: var(--panda-accent-light); color: var(--panda-accent); }
+    .toast-warning { background: var(--panda-warning-light); color: var(--panda-warning); }
+    .toast-info { background: var(--panda-info-light); color: var(--panda-info); }
+
+    /* Spacing tokens */
+    .spacing-grid {
+      display: flex;
+      flex-direction: column;
+      gap: var(--space-3);
+      background: var(--panda-white);
+      padding: var(--space-5) var(--space-6);
+      border-radius: var(--radius-lg);
+      box-shadow: var(--shadow-sm);
+    }
+    .spacing-row { display: flex; align-items: center; gap: var(--space-4); }
+    .spacing-bar { background: var(--panda-black); height: 20px; border-radius: 3px; }
+    .spacing-info { font-size: var(--font-size-xs); color: var(--panda-gray-500); font-family: monospace; min-width: 120px; }
+
+    /* Footer */
+    .ds-footer {
+      text-align: center;
+      padding: var(--space-12) var(--space-5);
+      color: var(--panda-gray-400);
+      font-size: var(--font-size-xs);
+      border-top: 1px solid var(--panda-gray-200);
+    }
+  </style>
+</head>
+<body>
+
+<header class="ds-header">
+  <div class="ds-logo">🐼 판다기프트<span>.</span></div>
+  <div class="ds-subtitle">Design System v1.0</div>
+</header>
+
+<nav class="ds-nav">
+  <a href="#colors" class="active">컬러</a>
+  <a href="#typography">타이포그래피</a>
+  <a href="#buttons">버튼</a>
+  <a href="#badges">뱃지</a>
+  <a href="#inputs">입력</a>
+  <a href="#cards">카드</a>
+  <a href="#table">테이블</a>
+  <a href="#feedback">피드백</a>
+  <a href="#spacing">간격</a>
+</nav>
+
+<div class="ds-container">
+
+  <!-- Colors -->
+  <section class="ds-section" id="colors">
+    <h2 class="ds-section-title">컬러 시스템</h2>
+    <p class="ds-section-desc">판다기프트 브랜드 아이덴티티를 구성하는 핵심 색상 팔레트입니다.</p>
+
+    <div class="ds-group-title">Brand</div>
+    <div class="color-grid">
+      <div class="color-swatch">
+        <div class="color-swatch-bg" style="background:#1A1A1A;"></div>
+        <div class="color-swatch-info">
+          <div class="color-swatch-name">Panda Black</div>
+          <div class="color-swatch-value">#1A1A1A</div>
+        </div>
+      </div>
+      <div class="color-swatch">
+        <div class="color-swatch-bg" style="background:#E8342A;"></div>
+        <div class="color-swatch-info">
+          <div class="color-swatch-name">Panda Accent</div>
+          <div class="color-swatch-value">#E8342A</div>
+        </div>
+      </div>
+      <div class="color-swatch">
+        <div class="color-swatch-bg" style="background:#FFFFFF; border:1px solid #E0E0E0;"></div>
+        <div class="color-swatch-info">
+          <div class="color-swatch-name">Panda White</div>
+          <div class="color-swatch-value">#FFFFFF</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="ds-group-title">Grayscale</div>
+    <div class="color-grid">
+      <div class="color-swatch"><div class="color-swatch-bg" style="background:#F8F8F8; border:1px solid #eee;"></div><div class="color-swatch-info"><div class="color-swatch-name">Gray 50</div><div class="color-swatch-value">#F8F8F8</div></div></div>
+      <div class="color-swatch"><div class="color-swatch-bg" style="background:#F0F0F0;"></div><div class="color-swatch-info"><div class="color-swatch-name">Gray 100</div><div class="color-swatch-value">#F0F0F0</div></div></div>
+      <div class="color-swatch"><div class="color-swatch-bg" style="background:#E0E0E0;"></div><div class="color-swatch-info"><div class="color-swatch-name">Gray 200</div><div class="color-swatch-value">#E0E0E0</div></div></div>
+      <div class="color-swatch"><div class="color-swatch-bg" style="background:#BDBDBD;"></div><div class="color-swatch-info"><div class="color-swatch-name">Gray 300</div><div class="color-swatch-value">#BDBDBD</div></div></div>
+      <div class="color-swatch"><div class="color-swatch-bg" style="background:#9E9E9E;"></div><div class="color-swatch-info"><div class="color-swatch-name">Gray 400</div><div class="color-swatch-value">#9E9E9E</div></div></div>
+      <div class="color-swatch"><div class="color-swatch-bg" style="background:#757575;"></div><div class="color-swatch-info"><div class="color-swatch-name">Gray 500</div><div class="color-swatch-value">#757575</div></div></div>
+      <div class="color-swatch"><div class="color-swatch-bg" style="background:#424242;"></div><div class="color-swatch-info"><div class="color-swatch-name">Gray 700</div><div class="color-swatch-value">#424242</div></div></div>
+      <div class="color-swatch"><div class="color-swatch-bg" style="background:#1A1A1A;"></div><div class="color-swatch-info"><div class="color-swatch-name">Gray 900</div><div class="color-swatch-value">#1A1A1A</div></div></div>
+    </div>
+
+    <div class="ds-group-title">Semantic</div>
+    <div class="color-grid">
+      <div class="color-swatch"><div class="color-swatch-bg" style="background:#2E7D32;"></div><div class="color-swatch-info"><div class="color-swatch-name">Success</div><div class="color-swatch-value">#2E7D32</div></div></div>
+      <div class="color-swatch"><div class="color-swatch-bg" style="background:#F57C00;"></div><div class="color-swatch-info"><div class="color-swatch-name">Warning</div><div class="color-swatch-value">#F57C00</div></div></div>
+      <div class="color-swatch"><div class="color-swatch-bg" style="background:#E8342A;"></div><div class="color-swatch-info"><div class="color-swatch-name">Danger</div><div class="color-swatch-value">#E8342A</div></div></div>
+      <div class="color-swatch"><div class="color-swatch-bg" style="background:#1565C0;"></div><div class="color-swatch-info"><div class="color-swatch-name">Info</div><div class="color-swatch-value">#1565C0</div></div></div>
+    </div>
+  </section>
+
+  <!-- Typography -->
+  <section class="ds-section" id="typography">
+    <h2 class="ds-section-title">타이포그래피</h2>
+    <p class="ds-section-desc">폰트 스케일 및 굵기 시스템입니다. 기본 폰트: Apple SD Gothic Neo / Noto Sans KR</p>
+
+    <div class="type-sample"><span class="type-label">3xl / 38px</span><span style="font-size:38px; font-weight:700; letter-spacing:-1px;">판다기프트 선물</span></div>
+    <div class="type-sample"><span class="type-label">2xl / 30px</span><span style="font-size:30px; font-weight:700; letter-spacing:-0.5px;">판다기프트 선물</span></div>
+    <div class="type-sample"><span class="type-label">xl / 24px</span><span style="font-size:24px; font-weight:700;">판다기프트 선물</span></div>
+    <div class="type-sample"><span class="type-label">lg / 20px</span><span style="font-size:20px; font-weight:600;">판다기프트 선물</span></div>
+    <div class="type-sample"><span class="type-label">md / 17px</span><span style="font-size:17px; font-weight:500;">판다기프트 선물</span></div>
+    <div class="type-sample"><span class="type-label">base / 15px</span><span style="font-size:15px;">판다기프트 선물 — 기본 본문 텍스트입니다.</span></div>
+    <div class="type-sample"><span class="type-label">sm / 13px</span><span style="font-size:13px; color:#757575;">보조 설명 텍스트, 캡션, 메타 정보</span></div>
+    <div class="type-sample"><span class="type-label">xs / 11px</span><span style="font-size:11px; color:#9E9E9E; text-transform:uppercase; letter-spacing:0.5px;">LABEL · TAG · CAPTION</span></div>
+  </section>
+
+  <!-- Buttons -->
+  <section class="ds-section" id="buttons">
+    <h2 class="ds-section-title">버튼</h2>
+    <p class="ds-section-desc">인터랙션의 핵심 요소입니다. 용도에 맞는 스타일을 사용하세요.</p>
+
+    <div class="ds-group-title">스타일</div>
+    <div class="btn-grid">
+      <button class="btn btn-primary btn-md">Primary</button>
+      <button class="btn btn-accent btn-md">Accent</button>
+      <button class="btn btn-outline btn-md">Outline</button>
+      <button class="btn btn-ghost btn-md">Ghost</button>
+      <button class="btn btn-disabled btn-md" disabled>Disabled</button>
+    </div>
+
+    <div class="ds-group-title">사이즈</div>
+    <div class="btn-grid">
+      <button class="btn btn-primary btn-lg">Large</button>
+      <button class="btn btn-primary btn-md">Medium</button>
+      <button class="btn btn-primary btn-sm">Small</button>
+      <button class="btn btn-primary btn-xs">XSmall</button>
+    </div>
+
+    <div class="ds-group-title">아이콘 포함</div>
+    <div class="btn-grid">
+      <button class="btn btn-primary btn-md">🛒 장바구니 담기</button>
+      <button class="btn btn-accent btn-md">🎁 선물하기</button>
+      <button class="btn btn-outline btn-md">📦 주문 조회</button>
+      <button class="btn btn-ghost btn-md">♡ 찜하기</button>
+    </div>
+  </section>
+
+  <!-- Badges -->
+  <section class="ds-section" id="badges">
+    <h2 class="ds-section-title">뱃지 &amp; 태그</h2>
+    <p class="ds-section-desc">상태, 카테고리, 라벨 표시에 사용합니다.</p>
+
+    <div class="badge-row">
+      <span class="badge badge-black">판다픽</span>
+      <span class="badge badge-accent">SALE</span>
+      <span class="badge badge-accent-light">NEW</span>
+      <span class="badge badge-success">배송완료</span>
+      <span class="badge badge-warning">배송중</span>
+      <span class="badge badge-info">결제완료</span>
+      <span class="badge badge-gray">품절</span>
+      <span class="badge badge-outline">인쇄가능</span>
+      <span class="badge badge-accent">🔥 인기</span>
+      <span class="badge badge-success">✓ 재입고</span>
+    </div>
+  </section>
+
+  <!-- Inputs -->
+  <section class="ds-section" id="inputs">
+    <h2 class="ds-section-title">입력 필드</h2>
+    <p class="ds-section-desc">폼 요소와 입력 컴포넌트 스타일입니다.</p>
+
+    <div class="input-grid">
+      <div class="input-group">
+        <label class="input-label">기본</label>
+        <input class="input-field" type="text" placeholder="텍스트를 입력하세요">
+      </div>
+      <div class="input-group">
+        <label class="input-label">포커스 (클릭해보세요)</label>
+        <input class="input-field" type="text" placeholder="포커스 시 테두리 변경">
+      </div>
+      <div class="input-group">
+        <label class="input-label">오류 상태</label>
+        <input class="input-field error" type="text" value="잘못된 입력값">
+        <span class="input-hint error">필수 항목입니다.</span>
+      </div>
+      <div class="input-group">
+        <label class="input-label">성공 상태</label>
+        <input class="input-field success" type="text" value="올바른 입력값">
+        <span class="input-hint success">사용 가능한 값입니다.</span>
+      </div>
+      <div class="input-group">
+        <label class="input-label">비활성화</label>
+        <input class="input-field" type="text" value="수정 불가" disabled>
+        <span class="input-hint">변경할 수 없습니다.</span>
+      </div>
+      <div class="input-group">
+        <label class="input-label">선택 (Select)</label>
+        <select class="input-field">
+          <option>카테고리 선택</option>
+          <option>기업 선물</option>
+          <option>답례품</option>
+          <option>판촉물</option>
+        </select>
+      </div>
+    </div>
+  </section>
+
+  <!-- Cards -->
+  <section class="ds-section" id="cards">
+    <h2 class="ds-section-title">카드 컴포넌트</h2>
+    <p class="ds-section-desc">상품, 콘텐츠, 정보를 표시하는 컨테이너 요소입니다.</p>
+
+    <div class="card-grid">
+      <div class="card">
+        <div class="card-img">🎁</div>
+        <div class="card-body">
+          <div class="card-title">기업 선물 세트 A형</div>
+          <div class="card-desc">고급 포장 + 판다기프트 리본 포함, 대량 주문 가능</div>
+          <span class="badge badge-accent">SALE 15%</span>
+        </div>
+        <div class="card-footer">
+          <div class="card-price">32,000<span class="card-price-unit">원~</span></div>
+          <button class="btn btn-primary btn-sm">담기</button>
+        </div>
+      </div>
+      <div class="card">
+        <div class="card-img">🖨️</div>
+        <div class="card-body">
+          <div class="card-title">인쇄 판촉물 패키지</div>
+          <div class="card-desc">로고 인쇄 포함, 50개 이상 주문 시 단가 할인</div>
+          <span class="badge badge-black">판다픽</span>
+        </div>
+        <div class="card-footer">
+          <div class="card-price">8,500<span class="card-price-unit">원~</span></div>
+          <button class="btn btn-accent btn-sm">선물</button>
+        </div>
+      </div>
+      <div class="card">
+        <div class="card-img">🍫</div>
+        <div class="card-body">
+          <div class="card-title">답례품 스위트 박스</div>
+          <div class="card-desc">웨딩·돌잔치·개업 답례품, 소량 주문 가능</div>
+          <span class="badge badge-success">재입고</span>
+        </div>
+        <div class="card-footer">
+          <div class="card-price">12,000<span class="card-price-unit">원~</span></div>
+          <button class="btn btn-outline btn-sm">조회</button>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Table -->
+  <section class="ds-section" id="table">
+    <h2 class="ds-section-title">테이블</h2>
+    <p class="ds-section-desc">주문 내역, 상품 목록 등 데이터 표시에 사용합니다.</p>
+
+    <div class="ds-table-wrap">
+      <table class="ds-table">
+        <thead>
+          <tr>
+            <th>주문번호</th>
+            <th>상품명</th>
+            <th>수량</th>
+            <th>금액</th>
+            <th>상태</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>#20260001</td>
+            <td>기업 선물 세트 A형</td>
+            <td>50개</td>
+            <td>1,600,000원</td>
+            <td><span class="badge badge-info">결제완료</span></td>
+          </tr>
+          <tr>
+            <td>#20260002</td>
+            <td>인쇄 판촉물 패키지</td>
+            <td>200개</td>
+            <td>1,700,000원</td>
+            <td><span class="badge badge-warning">배송중</span></td>
+          </tr>
+          <tr>
+            <td>#20260003</td>
+            <td>답례품 스위트 박스</td>
+            <td>100개</td>
+            <td>1,200,000원</td>
+            <td><span class="badge badge-success">배송완료</span></td>
+          </tr>
+          <tr>
+            <td>#20260004</td>
+            <td>로고 머그컵 세트</td>
+            <td>30개</td>
+            <td>450,000원</td>
+            <td><span class="badge badge-gray">취소</span></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <!-- Feedback -->
+  <section class="ds-section" id="feedback">
+    <h2 class="ds-section-title">피드백 메시지</h2>
+    <p class="ds-section-desc">사용자 액션에 대한 시스템 응답 메시지입니다.</p>
+
+    <div class="toast-grid">
+      <div class="toast toast-success"><span class="toast-icon">✓</span><span class="toast-msg">주문이 성공적으로 접수되었습니다.</span></div>
+      <div class="toast toast-error"><span class="toast-icon">✕</span><span class="toast-msg">결제 처리 중 오류가 발생했습니다. 다시 시도해 주세요.</span></div>
+      <div class="toast toast-warning"><span class="toast-icon">!</span><span class="toast-msg">재고가 10개 미만입니다. 빠르게 주문하세요.</span></div>
+      <div class="toast toast-info"><span class="toast-icon">i</span><span class="toast-msg">50개 이상 주문 시 견적 문의를 이용해 주세요.</span></div>
+    </div>
+  </section>
+
+  <!-- Spacing -->
+  <section class="ds-section" id="spacing">
+    <h2 class="ds-section-title">간격 시스템</h2>
+    <p class="ds-section-desc">4px 기반의 8pt 그리드 시스템입니다.</p>
+
+    <div class="spacing-grid">
+      <div class="spacing-row"><div class="spacing-info">space-1 · 4px</div><div class="spacing-bar" style="width:4px;"></div></div>
+      <div class="spacing-row"><div class="spacing-info">space-2 · 8px</div><div class="spacing-bar" style="width:8px;"></div></div>
+      <div class="spacing-row"><div class="spacing-info">space-3 · 12px</div><div class="spacing-bar" style="width:12px;"></div></div>
+      <div class="spacing-row"><div class="spacing-info">space-4 · 16px</div><div class="spacing-bar" style="width:16px;"></div></div>
+      <div class="spacing-row"><div class="spacing-info">space-5 · 20px</div><div class="spacing-bar" style="width:20px;"></div></div>
+      <div class="spacing-row"><div class="spacing-info">space-6 · 24px</div><div class="spacing-bar" style="width:24px;"></div></div>
+      <div class="spacing-row"><div class="spacing-info">space-8 · 32px</div><div class="spacing-bar" style="width:32px;"></div></div>
+      <div class="spacing-row"><div class="spacing-info">space-10 · 40px</div><div class="spacing-bar" style="width:40px;"></div></div>
+      <div class="spacing-row"><div class="spacing-info">space-12 · 48px</div><div class="spacing-bar" style="width:48px;"></div></div>
+      <div class="spacing-row"><div class="spacing-info">space-16 · 64px</div><div class="spacing-bar" style="width:64px;"></div></div>
+    </div>
+  </section>
+
+</div>
+
+<footer class="ds-footer">
+  판다기프트(주) Design System v1.0 · Built with Claude Code
+</footer>
+
+<script>
+  // Nav active state on scroll
+  const sections = document.querySelectorAll('.ds-section');
+  const navLinks = document.querySelectorAll('.ds-nav a');
+
+  window.addEventListener('scroll', () => {
+    let current = '';
+    sections.forEach(section => {
+      if (window.scrollY >= section.offsetTop - 100) current = section.id;
+    });
+    navLinks.forEach(a => {
+      a.classList.toggle('active', a.getAttribute('href') === '#' + current);
+    });
+  });
+
+  navLinks.forEach(a => {
+    a.addEventListener('click', e => {
+      e.preventDefault();
+      document.querySelector(a.getAttribute('href')).scrollIntoView({ behavior: 'smooth' });
+    });
+  });
+</script>
+</body>
+</html>
